@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>河南奶龙大学 · 欢迎来到奶龙的家</title>
+<meta name="description" content="河南奶龙大学趣味页面：领取你的奶龙录取通知书与专属学号，可浏览学校简介、院系设置与招生信息，并一键前往学校官网。本页为个人趣味制作页面。" />
+<meta name="keywords" content="河南奶龙大学,录取通知书,学号,学校简介,院系设置,招生信息" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐉</text></svg>" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="float-bg" aria-hidden="true">
+  <span>🐉</span><span>🥛</span><span>☁️</span><span>🐉</span><span>🍩</span><span>☁️</span>
+</div>
+
+<!-- 对角探头装饰：左上 / 右下斜向探出的奶蛙 -->
+<aside class="side-mascot corner-tl" aria-hidden="true">
+  <img class="frog" src="naiwa_peek.png" alt="奶蛙"/>
+</aside>
+<aside class="side-mascot corner-br" aria-hidden="true">
+  <img class="frog" src="naiwa_peek.png" alt="奶蛙"/>
+</aside>
+
+<main class="stage">
+
+  <!-- 校徽：河南奶龙大学（AI 原创设计版） -->
+  <div class="emblem-wrap pop" id="emblem">
+    <span class="sparkle s1">✦</span>
+    <span class="sparkle s2">✦</span>
+    <span class="sparkle s3">✦</span>
+    <span class="sparkle s4">✧</span>
+
+    <!-- 校徽两侧的奶龙卫士（左右对称，皆面向校徽） -->
+    <img class="guard guard-l" src="dragon.png" alt="奶龙"/>
+    <img class="guard guard-r" src="dragon.png" alt="奶龙"/>
+
+    <svg class="emblem" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <path id="ringTop" d="M160,160 m-122,0 a122,122 0 1,1 244,0" />
+        <path id="ringBottom" d="M160,160 m-128,0 a128,128 0 1,0 256,0" />
+        <clipPath id="discClip"><circle cx="160" cy="160" r="108"/></clipPath>
+        <path id="star4" d="M0,-8 L2.2,-2.2 L8,0 L2.2,2.2 L0,8 L-2.2,2.2 L-8,0 L-2.2,-2.2 Z" />
+        <radialGradient id="innerBg" cx="50%" cy="38%" r="70%">
+          <stop offset="0%" stop-color="#FFFFFF"/>
+          <stop offset="100%" stop-color="#EFF6FF"/>
+        </radialGradient>
+      </defs>
+
+      <!-- 外圈：金色描边 -->
+      <circle cx="160" cy="160" r="156" fill="#FFFFFF" stroke="#FFC83C" stroke-width="4"/>
+      <!-- 主环：纹章蓝 -->
+      <circle cx="160" cy="160" r="146" fill="#FFFFFF" stroke="#1E56A0" stroke-width="5"/>
+      <!-- 环形校名（校徽核心识别） -->
+      <text class="ring-text-cn">
+        <textPath href="#ringTop" startOffset="50%" text-anchor="middle">河南奶龙大学</textPath>
+      </text>
+      <text class="ring-text-en">
+        <textPath href="#ringBottom" startOffset="50%" text-anchor="middle">HENAN NAILONG UNIVERSITY</textPath>
+      </text>
+
+      <!-- 环带左右对称纹饰：星点 + 菱钻 -->
+      <g fill="#FFB300">
+        <g transform="translate(24,124)"><use href="#star4" transform="scale(.85)"/></g>
+        <g transform="translate(19,160)"><use href="#star4"/></g>
+        <g transform="translate(24,196)"><use href="#star4" transform="scale(.85)"/></g>
+        <circle cx="34" cy="142" r="2.2"/>
+        <circle cx="34" cy="178" r="2.2"/>
+        <g transform="translate(296,124)"><use href="#star4" transform="scale(.85)"/></g>
+        <g transform="translate(301,160)"><use href="#star4"/></g>
+        <g transform="translate(296,196)"><use href="#star4" transform="scale(.85)"/></g>
+        <circle cx="286" cy="142" r="2.2"/>
+        <circle cx="286" cy="178" r="2.2"/>
+      </g>
+      <g fill="#1E56A0" opacity=".85">
+        <path d="M40,153 l4,7 l-4,7 l-4,-7 Z"/>
+        <path d="M280,153 l4,7 l-4,7 l-4,-7 Z"/>
+      </g>
+
+      <!-- 内盘：AI 原创校徽主图（小龙举火炬 · 书 · 盾 · 月桂） -->
+      <g clip-path="url(#discClip)">
+        <image class="mascot" href="emblem.png" x="50" y="50" width="220" height="220" preserveAspectRatio="xMidYMid slice"/>
+      </g>
+      <circle cx="160" cy="160" r="108" fill="none" stroke="#1E56A0" stroke-width="2.5"/>
+    </svg>
+  </div>
+
+  <h1 class="title" id="title">河南奶龙大学</h1>
+  <p class="subtitle" id="subtitle">Henan Nailong University · 会喷火，也会写代码</p>
+  <p class="motto">校训 · 借一缕火种，成万丈炬光</p>
+
+  <!-- 录取通知书 -->
+  <section class="letter" id="letter">
+    <div class="letter-head">
+      <img class="letter-seal" src="nailong_head.png" alt="奶龙印章"/>
+      <h2>录 取 通 知 书</h2>
+      <p class="letter-en">ADMISSION LETTER · HENAN NAILONG UNIVERSITY</p>
+    </div>
+    <div class="letter-body">
+      <p>亲爱的 <strong>奶龙学子</strong>：</p>
+      <p>恭喜你！经奶龙大学「嘿嘿」招生委员会严格审核（主要看你会不会干饭），你已被 <strong>河南奶龙大学</strong> 光荣录取！</p>
+      <div class="stu-no">
+        <span>你的专属学号</span>
+        <strong id="stuNo">NAI·2026·0000</strong>
+      </div>
+      <p class="stu-line">你是第 <strong class="counter" id="visitNum">0</strong> 位入学的奶龙学子，全校师生都在等你。</p>
+      <p class="stu-line muted">报到时间：9 月 1 日 · 报到地点：奶龙广场</p>
+    </div>
+  </section>
+
+  <!-- 栏目导航：学校简介 / 院系设置 / 招生信息 -->
+  <nav class="portal" id="portal" aria-label="校园栏目">
+    <a class="portal-card" href="about.html">
+      <span class="portal-ico">🏫</span>
+      <span class="portal-body">
+        <span class="portal-title">学校简介</span>
+        <span class="portal-desc">办学理念 · 校训 · 校园概览</span>
+      </span>
+      <span class="portal-go">查看 ›</span>
+    </a>
+    <a class="portal-card" href="colleges.html">
+      <span class="portal-ico">📚</span>
+      <span class="portal-body">
+        <span class="portal-title">院系设置</span>
+        <span class="portal-desc">六大学院 · 专业与方向</span>
+      </span>
+      <span class="portal-go">查看 ›</span>
+    </a>
+    <a class="portal-card" href="admission.html">
+      <span class="portal-ico">🎓</span>
+      <span class="portal-body">
+        <span class="portal-title">招生信息</span>
+        <span class="portal-desc">招生计划 · 报到须知</span>
+      </span>
+      <span class="portal-go">查看 ›</span>
+    </a>
+  </nav>
+
+  <!-- 前往官网（唯一入口：真实官网地址只存在于按钮上） -->
+  <div class="go-wrap" id="goWrap">
+    <a class="go-btn" id="goBtn" href="https://hbcet.hpu.edu.cn/index.htm" target="_blank" rel="noopener">
+      <span class="go-btn-label">立即前往官网</span>
+    </a>
+    <p class="go-note">河南奶龙大学</p>
+  </div>
+
+  <footer class="foot">
+    <p>本页为趣味展示页 · 正式信息请以学校官方渠道发布为准</p>
+    <p>© 2026 河南奶龙大学（虚构展示） · 页面制作：<span class="author">李大懒猪</span></p>
+    <p class="foot-note">免责声明：本页系个人出于技术趣味制作的非官方演示页面，为虚构校园情境的互动展示，与任何真实院校、机构不存在隶属、代理或合作关系；页面所涉校名、徽章、文字、图像及编号等元素均为虚构演示内容，不代表任何真实主体的立场，亦不作事实性陈述或用途承诺，一切正式信息请以官方渠道发布者为准。若认为本页内容可能造成误解或侵犯合法权益，可联系作者即时调整或下线。</p>
+  </footer>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
