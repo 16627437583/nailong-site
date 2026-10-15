@@ -8,7 +8,11 @@
   --blue-soft:#4FB0E0;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;}
+html,body{height:100%;max-width:100%;}
+/* 关键修复：禁止任何横向溢出。
+   页面内容一旦比屏幕宽，手机上就能左右拖动，缩放后中轴线必然偏离屏幕中心。 */
+html{overflow-x:hidden;}
+@supports (overflow-x:clip){html{overflow-x:clip;}}
 body{
   font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
   background:radial-gradient(circle at 50% 0%,#FFFDF4 0%,var(--cream) 55%,#F2EFE3 100%);
@@ -71,7 +75,8 @@ body{
   opacity:0;animation:up .8s .65s ease both;
 }
 .motto{
-  margin-top:10px;font-size:15px;font-weight:800;letter-spacing:3px;
+  margin-top:10px;font-size:clamp(13px,3.4vw,15px);font-weight:800;letter-spacing:2px;
+  max-width:100%;
   color:var(--blue);
   background:linear-gradient(135deg,rgba(255,210,63,.18),rgba(79,176,224,.14));
   border:1px solid rgba(30,86,160,.18);
@@ -82,7 +87,7 @@ body{
 
 /* 录取通知书 */
 .letter{
-  width:min(520px,92vw);
+  width:min(520px,100%);
   margin-top:36px;
   background:linear-gradient(180deg,#FFFDF4,#FFF8E2);
   border:2px solid #F0DCA0;
@@ -117,12 +122,12 @@ img.letter-seal{
 .letter-body p{font-size:15px;line-height:1.9;margin-bottom:8px;}
 .letter-body strong{color:#C77700;}
 .stu-no{
-  margin:14px auto 12px;max-width:320px;text-align:center;
+  margin:14px auto 12px;width:100%;max-width:320px;text-align:center;
   background:#FFF;border:2px solid var(--yellow);border-radius:14px;padding:12px;
   box-shadow:0 6px 16px rgba(244,180,0,.18);
 }
 .stu-no span{display:block;font-size:12px;color:var(--muted);letter-spacing:2px;}
-.stu-no strong{font-size:24px;letter-spacing:2px;color:#B8860B;}
+.stu-no strong{font-size:clamp(16px,5.6vw,24px);letter-spacing:1px;color:#B8860B;white-space:nowrap;}
 .stu-line{text-align:center;font-size:15px;}
 .stu-line .counter{color:#E8720C;font-size:20px;}
 .stu-line.muted{color:var(--muted);font-size:13px;margin-top:2px;}
@@ -190,24 +195,38 @@ img.letter-seal{
   .go-btn{font-size:17px;letter-spacing:2px;padding:16px 40px;width:100%;}
 }
 
-/* 对角探头装饰：左上 / 右下斜向探出的奶蛙（常驻，仅轻微呼吸浮动） */
-.side-mascot{
-  position:fixed;z-index:2;pointer-events:none;width:190px;
+/* 奶蛙装饰裁剪层：
+   奶蛙故意「探出屏幕边缘」，若直接贴在 body 上，超出视口的那部分会撑大文档宽度，
+   手机上就会允许左右拖动 —— 拖动/缩放后录取通知书、校徽的中轴线必然偏离屏幕中心。
+   用一个宽度=视口宽、overflow:hidden 的层把探出部分裁掉，外观完全不变，横向溢出归零。
+   桌面端：固定铺满视口，随屏常驻（与原行为一致）。
+   手机端：改为文档顶部的绝对定位盒，随页面滚动滑走，不遮挡正文。 */
+.deco-clip{
+  position:fixed;inset:0;z-index:2;
+  overflow:hidden;pointer-events:none;
 }
+
+/* 对角探头装饰：左上 / 右下斜向探出的奶蛙
+   结构要点：.side-mascot 只负责「贴哪一侧」（右侧用 scaleX(-1) 镜像），
+   .frog 内层负责旋转与浮动动画。这样镜像由外层统一完成，
+   左右两只的定位盒在布局上完全相等，被裁剪后露出的宽度必然一致，视觉严格对称。 */
+.side-mascot{
+  position:absolute;z-index:2;pointer-events:none;width:190px;
+}
+.corner-br{transform:scaleX(-1);}
 .side-mascot .frog{
   width:100%;height:auto;display:block;
   filter:drop-shadow(0 12px 20px rgba(0,0,0,.16));
+  animation:peekBreathe 5.2s ease-in-out infinite;
 }
-.corner-tl{left:-56px;top:-44px;animation:peekBreathe 5.2s ease-in-out infinite;}
-.corner-br{right:-56px;bottom:-44px;animation:peekBreatheFlip 5.2s ease-in-out infinite .9s;}
 @keyframes peekBreathe{
   0%,100%{transform:rotate(-7deg) translate(0,0);}
-  50%{transform:rotate(-5deg) translate(12px,10px);}
+  50%{transform:rotate(-5deg) translate(10px,8px);}
 }
-@keyframes peekBreatheFlip{
-  0%,100%{transform:scaleX(-1) rotate(-7deg) translate(0,0);}
-  50%{transform:scaleX(-1) rotate(-5deg) translate(-12px,-10px);}
-}
+
+/* 左右偏移量绝对相等，探出部分由 .deco-clip 裁掉 */
+.corner-tl{left:-52px;top:-40px;}
+.corner-br{right:-52px;top:-40px;}
 
 /* 校徽两侧的奶龙卫士（左右对称，皆仰面朝向校徽） */
 .guard{
@@ -229,16 +248,23 @@ img.letter-seal{
   text-align:justify;
 }
 
-/* 手机端：显示两侧奶蛙，改为绝对定位（随页面滚动滑走，不常驻遮挡文字） */
+/* 手机端：奶蛙改为随页面滚动（不常驻遮挡文字），并整体收进裁剪层内 */
 @media (max-width:920px){
-  .side-mascot{display:block;position:absolute;width:104px;z-index:3;}
-  .corner-tl{left:-38px;top:10px;animation:peekBreathe 5.2s ease-in-out infinite;}
-  .corner-br{right:-38px;top:66px;animation:peekBreatheFlip 5.2s ease-in-out infinite .9s;}
+  /* 裁剪层改为文档流顶部的绝对定位盒：宽度=视口宽，高度足够容纳两只奶蛙 */
+  .deco-clip{
+    position:absolute;inset:0 0 auto 0;height:300px;z-index:3;
+  }
+  /* 左右两只严格镜像对称：同尺寸、同高度、同相位、同偏移量，视觉重心居中 */
+  .side-mascot{display:block;position:absolute;width:96px;z-index:3;}
+  .corner-tl{left:-34px;top:12px;}
+  .corner-br{right:-34px;top:12px;}
   .emblem-wrap{width:min(280px,62vw);}
   .portal{grid-template-columns:1fr;gap:12px;}
 }
 @media (max-width:480px){
   .guard{width:54px;}
+  .side-mascot{width:82px;}
+  .corner-tl,.corner-br{top:10px;}
 }
 
 /* 内容页返回按钮 */
