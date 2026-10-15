@@ -17,13 +17,15 @@
   <span>🐉</span><span>🥛</span><span>☁️</span><span>🐉</span><span>🍩</span><span>☁️</span>
 </div>
 
-<!-- 对角探头装饰：左上 / 右下斜向探出的奶蛙 -->
-<aside class="side-mascot corner-tl" aria-hidden="true">
-  <img class="frog" src="naiwa_peek.png" alt="奶蛙"/>
-</aside>
-<aside class="side-mascot corner-br" aria-hidden="true">
-  <img class="frog" src="naiwa_peek.png" alt="奶蛙"/>
-</aside>
+<!-- 对角探头装饰：左上 / 右下斜向探出的奶蛙（包在裁剪层内，防止横向溢出） -->
+<div class="deco-clip" aria-hidden="true">
+  <aside class="side-mascot corner-tl">
+    <img class="frog" src="naiwa_peek.png" alt=""/>
+  </aside>
+  <aside class="side-mascot corner-br">
+    <img class="frog" src="naiwa_peek.png" alt=""/>
+  </aside>
+</div>
 
 <main class="stage">
 
