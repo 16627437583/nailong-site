@@ -104,4 +104,88 @@
       if (label) label.textContent = "正在前往…";
     });
   }
+
+  /* ---------- 右下角奶龙客服：表白墙微信号气泡 ---------- */
+  var wallBot = document.getElementById("wallBot");
+  var wallBubble = document.getElementById("wallBubble");
+  var wallDragon = document.getElementById("wallDragon");
+  var wallCopy = document.getElementById("wallCopy");
+  if (wallBot && wallBubble && wallDragon) {
+    var WECHAT = "HLGBBQ-2025";
+    var autoTimer = null;
+
+    function openBubble() {
+      clearTimeout(autoTimer);
+      wallBubble.classList.add("show");
+      wallDragon.setAttribute("aria-expanded", "true");
+    }
+    function closeBubble() {
+      wallBubble.classList.remove("show");
+      wallDragon.setAttribute("aria-expanded", "false");
+    }
+    function scheduleClose() {
+      clearTimeout(autoTimer);
+      autoTimer = setTimeout(closeBubble, 6000);
+    }
+
+    // 点奶龙：开 / 关气泡
+    wallDragon.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (wallBubble.classList.contains("show")) {
+        closeBubble();
+      } else {
+        openBubble();
+        scheduleClose();
+      }
+    });
+
+    // 鼠标移入奶龙或气泡时保持展开，避免误触消失
+    wallBot.addEventListener("mouseenter", function () { clearTimeout(autoTimer); });
+    wallBot.addEventListener("mouseleave", function () {
+      if (wallBubble.classList.contains("show")) scheduleClose();
+    });
+
+    // 点击页面空白处收起（复制按钮点击不受影响）
+    document.addEventListener("click", function (e) {
+      if (!wallBot.contains(e.target)) closeBubble();
+    });
+
+    // 复制微信号
+    if (wallCopy) {
+      wallCopy.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var done = function () {
+          wallCopy.textContent = "已复制";
+          wallCopy.classList.add("done");
+          setTimeout(function () {
+            wallCopy.textContent = "复制";
+            wallCopy.classList.remove("done");
+          }, 1600);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(WECHAT).then(done, fallback);
+        } else {
+          fallback();
+        }
+        function fallback() {
+          var ta = document.createElement("textarea");
+          ta.value = WECHAT;
+          ta.setAttribute("readonly", "");
+          ta.style.cssText = "position:absolute;left:-9999px;opacity:0";
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand("copy"); done(); } catch (err) { /* 忽略 */ }
+          document.body.removeChild(ta);
+        }
+      });
+    }
+
+    // 进入页面 2.6 秒后自动探头提示一次（只提示这一次，6 秒后自动收起，不长期遮挡内容）
+    setTimeout(function () {
+      if (!wallBubble.classList.contains("show")) {
+        openBubble();
+        scheduleClose();
+      }
+    }, 2600);
+  }
 })();
