@@ -275,3 +275,110 @@ img.letter-seal{
   font-family:inherit;font-size:15px;border:none;cursor:pointer;
 }
 .backlink.ghost{background:#fff;color:var(--blue);box-shadow:0 8px 20px rgba(30,86,160,.12);margin-left:10px;}
+
+/* ===== 右下角奶龙客服（学校表白墙入口） =====
+   固定在视口右下角，不占据文档流，因此不会撑大文档宽度、
+   不会破坏手机端「横向溢出为 0」与中轴线居中的既有修复。
+   z-index 高于 confetti(50) 但低于无意义，避开两侧探头奶蛙(.deco-clip z=2~3)。 */
+.wall-bot{
+  position:fixed;right:18px;bottom:18px;z-index:60;
+  display:flex;flex-direction:column;align-items:flex-end;gap:10px;
+  font-family:inherit;
+}
+
+/* 奶龙本体 */
+.wall-dragon{
+  position:relative;border:none;background:none;padding:0;cursor:pointer;
+  width:78px;line-height:0;
+  filter:drop-shadow(0 8px 16px rgba(0,0,0,.20));
+  animation:wallBob 3.4s ease-in-out infinite;
+  transition:transform .2s;
+}
+.wall-dragon:hover{transform:translateY(-4px) scale(1.05);}
+.wall-dragon:active{transform:scale(.94);}
+.wall-dragon img{width:100%;height:auto;display:block;}
+/* 奶龙右上角的小红点，提示「有话要说」 */
+.wall-dot{
+  position:absolute;top:2px;right:2px;
+  width:15px;height:15px;border-radius:50%;
+  background:#E8453C;border:2.5px solid #fff;
+  animation:wallPulse 1.7s ease-in-out infinite;
+}
+@keyframes wallBob{
+  0%,100%{transform:translateY(0) rotate(0);}
+  50%{transform:translateY(-7px) rotate(-3deg);}
+}
+@keyframes wallPulse{
+  0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(232,69,60,.55);}
+  60%{transform:scale(1.1);box-shadow:0 0 0 9px rgba(232,69,60,0);}
+}
+
+/* 气泡对话框 */
+.wall-bubble{
+  position:relative;
+  width:238px;max-width:calc(100vw - 96px);
+  background:linear-gradient(180deg,#FFFFFF,#FFF8E2);
+  border:2px solid #F0DCA0;border-radius:16px;
+  padding:13px 15px 12px;
+  box-shadow:0 14px 30px rgba(150,120,30,.20);
+  opacity:0;visibility:hidden;transform:translateY(12px) scale(.92);
+  transform-origin:100% 100%;
+  transition:opacity .28s ease,transform .28s cubic-bezier(.34,1.56,.64,1),visibility .28s;
+}
+.wall-bubble.show{opacity:1;visibility:visible;transform:translateY(0) scale(1);}
+/* 气泡小尾巴：指向右下角的奶龙 */
+.wall-bubble::after{
+  content:"";position:absolute;right:26px;bottom:-11px;width:0;height:0;
+  border-left:11px solid transparent;border-right:11px solid transparent;
+  border-top:13px solid #F0DCA0;
+  filter:drop-shadow(0 3px 1px rgba(0,0,0,.06));
+}
+.wall-title{
+  font-size:14px;font-weight:900;color:var(--blue);letter-spacing:.5px;
+  margin-bottom:5px;
+}
+.wall-text{
+  font-size:12px;line-height:1.65;color:var(--muted);
+}
+/* 「微信号」小标签独立成行，给下方的微信号值留出完整宽度 */
+.wall-id-label{
+  display:inline-block;margin-top:9px;
+  font-size:10.5px;font-weight:700;color:#fff;background:var(--blue-soft);
+  border-radius:5px;padding:2px 7px;letter-spacing:.5px;
+}
+.wall-id{
+  margin-top:5px;display:flex;align-items:center;gap:7px;
+  background:#FFF;border:1.5px dashed #E8C86A;border-radius:10px;padding:6px 7px 6px 10px;
+}
+.wall-id-value{
+  font-size:13px;font-weight:900;color:#B8860B;letter-spacing:.4px;
+  font-family:"Consolas","Monaco",monospace;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  min-width:0;flex:1 1 auto;
+}
+.wall-copy{
+  flex:0 0 auto;cursor:pointer;font-family:inherit;
+  font-size:11.5px;font-weight:800;letter-spacing:.5px;
+  color:#fff;background:linear-gradient(135deg,#FFD23F,#FFB300);
+  border:none;border-radius:7px;padding:5px 9px;
+  transition:opacity .2s;
+}
+.wall-copy:hover{opacity:.86;}
+.wall-copy.done{background:linear-gradient(135deg,#4FB0A0,#2E8B7A);}
+
+@media (max-width:520px){
+  .wall-bot{right:12px;bottom:12px;gap:8px;}
+  .wall-dragon{width:62px;}
+  .wall-bubble{width:200px;max-width:calc(100vw - 78px);padding:11px 12px 10px;}
+  .wall-title{font-size:13px;}
+  .wall-text{font-size:11px;}
+  .wall-id{padding:5px 6px 5px 8px;gap:5px;}
+  .wall-id-value{font-size:12.5px;}
+  .wall-copy{font-size:11px;padding:5px 8px;}
+  .wall-dot{width:12px;height:12px;border-width:2px;}
+}
+/* 极窄屏：气泡进一步收窄，仅保留标题与微信号 */
+@media (max-width:360px){
+  .wall-bubble{width:176px;max-width:calc(100vw - 70px);}
+  .wall-text{display:none;}
+}
